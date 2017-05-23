@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Property : MonoBehaviour {
-	public string name;
-	public string owner;
-	public float rent;
-	public float price;
+	string name;
+	int colorGroup;
+	int buyPrice;
+	int morgagePrice;
+	int houses;
 
-	void selected(){
-		//called when a player is standing on the property area
+	string utilitytype;
+	int renthouse;  // rent with nothing on it
+	int renthotel;  // rent with a hotel
+
+	void payRent(){
+		
 	}
 
 }
