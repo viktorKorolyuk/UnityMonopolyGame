@@ -14,6 +14,8 @@ public class PlayerObject /*: MonoBehaviour*/ {
     PlayerObject() {
 
     }
+
+
     public class property {
         string name;
         int colorGroup;
@@ -28,13 +30,9 @@ public class PlayerObject /*: MonoBehaviour*/ {
         int rent4;  //
         int rent5;  // rent with a hotel
 
-
         property(string name,int Group, int buyPrice, int morgagePrice,string utilitytype, int rent) {
-
-            this.name = name;
+			this.name = name;
             this.colorGroup = Group;
-
-
         }
     }
 }
