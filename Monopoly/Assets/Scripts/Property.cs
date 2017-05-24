@@ -13,8 +13,7 @@ public class Property : MonoBehaviour {
 	int renthouse;  // rent with nothing on it
 	int renthotel;  // rent with a hotel
 
-	void payRent(){
-		
+	void payRent(PlayerObject who){
+		who.deduct (renthouse * houses); //simple deduction for houses only
 	}
-
 }
