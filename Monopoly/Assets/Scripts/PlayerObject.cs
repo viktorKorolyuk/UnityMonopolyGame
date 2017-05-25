@@ -10,6 +10,7 @@ public class PlayerObject : MonoBehaviour {
 	public void deduct(float price){
 		this.money -= price;
 	}
+
 	public void move(){
 		
 	}
