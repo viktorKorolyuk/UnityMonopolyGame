@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4499383, g: 0.49999565, b: 0.5755472, a: 1}
+  m_IndirectSpecularColor: {r: 0.4499386, g: 0.49999595, b: 0.5755477, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 723442725}
   - component: {fileID: 723442724}
   m_Layer: 0
-  m_Name: Board
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -187,7 +187,7 @@ Transform:
   m_GameObject: {fileID: 723442723}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 6, y: 6, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 733552461}
   - component: {fileID: 733552460}
   m_Layer: 0
-  m_Name: PropertyExample
+  m_Name: propertyExample
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -268,8 +268,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 733552459}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.65, y: 0.25, z: -2.44}
-  m_LocalScale: {x: 1, y: 0.08, z: 1}
+  m_LocalPosition: {x: 1.08, y: 0.25, z: -1.2}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -546,7 +546,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1560505456}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.1797018, y: 0.9452727, z: 1.8422163}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
