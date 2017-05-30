@@ -6,14 +6,14 @@ public class Property : MonoBehaviour {
 	string name;
 	int colorGroup;
 	int buyPrice;
-	int morgagePrice;
+	int morgtagePrice;
 	int houses;
 
 	string utilitytype;
 	int renthouse;  // rent with nothing on it
 	int renthotel;  // rent with a hotel
 
-	void payRent(PlayerObject who){
-		who.deduct (renthouse * houses); //simple deduction for houses only
+	void payRent(PlayerController who){
+		
 	}
 }
