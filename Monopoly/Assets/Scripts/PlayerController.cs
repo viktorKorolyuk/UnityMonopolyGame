@@ -8,16 +8,13 @@ public class PlayerController : MonoBehaviour {
     int getOutOfJailFreeCards = 0;
     int TileIndex = 0;
 
+
     // Use this for initialization
     void Start() {
         money = 1500;
     }
 
-    // Update is called once per frame
-    void Update() {
-
-    }
-    // money actions
+    // Money actions
     int getMoney() {
         return money;
     }
@@ -29,35 +26,42 @@ public class PlayerController : MonoBehaviour {
             return false;
         }
     }
-    void payMoney(int pay) {
+    public void payMoney(int pay) {
         money -= pay;
     }
-    void receiveMoney(int received) {
+    public void receiveMoney(int received) {
         money += received;
     }
-    // get out of jail free cards
 
-    void getJailCard() {
+    // Get out of jail free cards
+    public void getJailCard() {
         getOutOfJailFreeCards += 1;
     }
-    void playJailCard() {
+    public void playJailCard() {
         getOutOfJailFreeCards -= 1;
     }
-    int getGetOutOfJailCards() {
+    public int getGetOutOfJailCards() {
         return getOutOfJailFreeCards;
     }
 
-    //movement
-    int getTileIndex() {
+    // Movement
+    public int getTileIndex() {
         return TileIndex;
     }
-    void Move(int movement, Vector3 newpos) {
+	Vector3 pos = Vector3.zero;
+    public void Move(int movement, Vector3 newpos) {
         TileIndex += movement;
         TileIndex = TileIndex % 36;
-        gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, newpos, 10);
+		pos = newpos;
     }
-    void skipTo(int tile, Vector3 newpos) {
+    public void skipTo(int tile, Vector3 newpos) {
         TileIndex = tile;
         gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, newpos, 10);
+        pos = newpos;
     }
+
+	void Update(){
+		pos.y = transform.position.y;
+		gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, pos, Time.deltaTime );
+	}
 }

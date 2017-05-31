@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
+
 	string tileType;
 
-	public int rent;
+	public int rent = 100;
 	public int location; // Tile number
 	public GameObject owner;
 
@@ -23,7 +24,7 @@ public class Tile : MonoBehaviour {
 
 	void calculateRent () {
 
-	///	int rent = 
+		// int rent = ;
 
 	}
 }
