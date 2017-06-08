@@ -3,43 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    //work with movement!
+	
     int money = 0;
     int getOutOfJailFreeCards = 0;
     int TileIndex = 0;
-
+	Vector3 pos;
 
     // Use this for initialization
     void Start() {
         money = 1500;
+		pos = transform.position;
     }
 
     // Money actions
-    int getMoney() {
+    public int getMoney() {
         return money;
     }
 
-    bool enouoghmoney(int sub) {
+	//Check if player has enough money.
+    public bool enouoghmoney(int sub) {
         if (money - sub > 0) {
             return true;
         } else {
             return false;
         }
     }
+
+	//Deduct money from player
     public void payMoney(int pay) {
         money -= pay;
     }
+	//Add money to player
     public void receiveMoney(int received) {
         money += received;
     }
 
-    // Get out of jail free cards
+	//Get new OOJ (out of jail) card
     public void getJailCard() {
         getOutOfJailFreeCards += 1;
     }
+
+	//Use OOJ card
     public void playJailCard() {
         getOutOfJailFreeCards -= 1;
     }
+
+	//How many OOJ cards doth the player have?
     public int getGetOutOfJailCards() {
         return getOutOfJailFreeCards;
     }
@@ -48,20 +57,25 @@ public class PlayerController : MonoBehaviour {
     public int getTileIndex() {
         return TileIndex;
     }
-	Vector3 pos = Vector3.zero;
+
+	//Move player
     public void Move(int movement, Vector3 newpos) {
-        TileIndex += movement;
-        TileIndex = TileIndex % 36;
+        TileIndex += movement; //Abstractly move the player
+		TileIndex = TileIndex % 40; // make sure the player loops when they reach EOA
 		pos = newpos;
     }
+
+	//Teleport the player to the correct position. Used for jail
     public void skipTo(int tile, Vector3 newpos) {
         TileIndex = tile;
         gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, newpos, 10);
         pos = newpos;
     }
-
+		
 	void Update(){
-		pos.y = transform.position.y;
-		gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, pos, Time.deltaTime );
+		pos.y = transform.position.y; //player should not rise
+
+		//Move the player to the position using interpolation
+		gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, pos, Time.deltaTime);
 	}
 }

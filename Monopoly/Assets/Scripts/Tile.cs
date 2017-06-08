@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
-	string tileType;
-	public string propertyName;
+	string tileType; 				// 
+	public string propertyName; 	// 
 
-	public int rent = 100;
+	public int rent = 100; 			//
 	public int location; 			// Tile number
 	public GameObject owner;
 
-	public int numHouses; 				// 1, 2, 3, 4, Hotel
+	public int numHouses; 			// 1, 2, 3, 4, Hotel
 
 	int locationPrice;
 

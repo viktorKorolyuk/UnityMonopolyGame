@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class LuckyCards {
 
-    string[] chancecards;
-    string[] communitycards;
+	string[] chancecards = new string[10];
+	string[] communitycards = new string[10];
 
 	// Use this for initialization
 	void Start () {

@@ -4,50 +4,50 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
+
 	PlayerController[] PlayerGroup;
+	PlayerController currPlayer;
 	Tile[] Tiles;
 	int playerTurn = 0;
 
 
 	void Start () {
-		init ();
-		move ();
+		
 	}
 
 	void update () {
-
+		
 	}
 
 	//Setup the much-needed variables for game functionality
-	void init () {
+	public void init () {
 		//Get all players and tiles on board
 		// and insert them into memory for later use.
 
-		//Sharing variable tempArr to minimize memory consumption.
-		GameObject[] tempArr = GameObject.FindGameObjectsWithTag ("Tile"); //get the tiles in scene.
-		Tiles = new Tile[tempArr.Length]; //define tiles array size.
-		int i = 0; //Set an iterator for array index set.
-		foreach (GameObject e in tempArr) {
-			Tiles [i] = e.GetComponent<Tile> ();
-			i++;
-		}
 
-		tempArr = GameObject.FindGameObjectsWithTag ("Player"); //get the players in scene
+		Tiles = GameObject.FindGameObjectWithTag("Scanner").GetComponent<TileScanner>().Tiles.ToArray();
+		int i = 0; //Set an iterator for array index set.
+
+		GameObject[] tempArr = GameObject.FindGameObjectsWithTag ("Player"); //get the players in scene
 		PlayerGroup = new PlayerController[tempArr.Length]; //define player array size
 		i = 0; //Reset index iterator.
 		foreach (GameObject e in tempArr) {
 			PlayerGroup [i] = e.GetComponent<PlayerController> ();
 			i++;
 		}
-		tempArr = null; //clearing memory after not used.
-
+		currPlayer = PlayerGroup [0];
+		tempArr = null; //clearing memory after variable is not used
+		move();
 	}
+
 	//Allow selected player to move
 	public void move () {
-		float diceResult1 = DiceRoll.rollDice ();
-		PlayerGroup [playerTurn].Move (
-			1,
-			Tiles[(PlayerGroup[playerTurn].getTileIndex() + 1) % Tiles.Length].gameObject.transform.position); 
+		
+		int diceResult1 = (int)DiceRoll.rollDice ();
+		print ("Dice result: " + diceResult1 + ". currTileIndex: " + currPlayer.getTileIndex() + ". currTileIndex + diceResult: " + 
+			(currPlayer.getTileIndex() + diceResult1) % Tiles.Length);
+		print (Tiles [(currPlayer.getTileIndex () + diceResult1) % Tiles.Length].gameObject.name);
+		currPlayer.Move (diceResult1, Tiles[(PlayerGroup[playerTurn].getTileIndex() + diceResult1) % Tiles.Length].gameObject.transform.position); 
 	}
 
 	//Allow selected player to trade
@@ -55,16 +55,19 @@ public class GameController : MonoBehaviour {
 		
 	}
 
+	//Deduct money from player
+	public void payRent(int amount){
+		currPlayer.payMoney (amount);
+	}
+
 	//Change selected player
 	public void nextTurn () {
 		//choose the nextplayer, if its the last player in the index, go back to player 1
 		playerTurn++;
 		playerTurn = playerTurn % PlayerGroup.Length;
+		currPlayer = PlayerGroup [playerTurn];
 	}
-
-	/*
-	 * Methods for InputManager to use.
-	 */
+		
 	public PlayerController[] getPlayers(){
 		return PlayerGroup;
 	}
@@ -73,6 +76,9 @@ public class GameController : MonoBehaviour {
 		return Tiles;
 	}
 	public PlayerController getCurrPlayer(){
-		return PlayerGroup [playerTurn];
+		if (currPlayer)
+			return currPlayer;
+		return null;
 	}
+
 }

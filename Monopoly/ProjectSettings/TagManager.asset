@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Tile
   - BoardPopulate
+  - Scanner
+  - Loading
   layers:
   - Default
   - TransparentFX
