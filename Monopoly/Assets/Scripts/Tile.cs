@@ -4,27 +4,56 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
-	string tileType; 				// 
-	public string propertyName; 	// 
+	public int originalPrice = 100;
+	public int rent = 100; 			//Rent with default value. Public is used for hard-coded values.
 
-	public int rent = 100; 			//
-	public int location; 			// Tile number
-	public GameObject owner;
+	string tileType;  //What type of tile is it?
+	string propertyName; //What is it called?
+	PlayerController owner; //Reference to instance of PlayerController which a Player is using.
 
-	public int numHouses; 			// 1, 2, 3, 4, Hotel
-
-	int locationPrice;
 
 	// Use this for initialization
 	void Start () {
-
-		calculateRent ();
-			
+		propertyName = gameObject.name; //Set default name
 	}
 
-	void calculateRent () {
+	/*
+	 * GET and SET functions are defnined here. This allows controll over variables when they are referenced.
+	 * 
+	 */
+	public int Rent {
+		get {
+			return this.rent;
+		}
+		set {
+			rent = value;
+		}
+	}
 
-		// int rent = ;
+	public string PropertyName {
+		get {
+			return this.propertyName;
+		}
+		set {
+			this.propertyName = value;
+		}
+	}
 
+	public PlayerController Owner {
+		get {
+			return this.owner;
+		}
+		set {
+			owner = value;
+		}
+	}
+
+	public string TileType {
+		get {
+			return this.tileType;
+		}
+		set {
+			tileType = value;
+		}
 	}
 }

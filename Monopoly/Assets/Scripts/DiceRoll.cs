@@ -6,10 +6,12 @@ public static class DiceRoll {
 
 	/*
 	 * Utility class for dice-roll handling ONLY.
+	 * This class should not be instantiated, and to further the poinbt, it has been made static
 	 */
 
     static int roll;
     static bool doubles;
+
 
     public static int rollDice() {
         doubles = false; // assume rolls are different 
@@ -20,9 +22,11 @@ public static class DiceRoll {
         roll = roll1 + roll2;
         return roll;
     }
+
 	public static int getDiceRoll() { // asked for the diceroll, return it
         return roll;
     }
+
 	public static bool getDoubles() { // if both dice returned the same value, this is true
         return doubles;
     }
