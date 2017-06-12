@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LuckyCards {
+  
+    //TODO: After community card parser is finished, add more options to what can be chosen.  
+
+    #pragma warning disable 0618  
 
     int[] chancecards;
     int[] communitycards;
@@ -20,12 +24,7 @@ public class LuckyCards {
 	}
 	public int drawChanceCard(int random) {
         Random.seed = random;
-        return chancecards[(int)Random.Range(0,chancecards.Length)];
-    }
-	//TODO: Make community card support - for viktor.
-    public int drawCommunityCard(int random) {
-        Random.seed = random;
-		return chancecards[(int)Random.Range(0, chancecards.Length)];
+    return Random.Range(-100, 200);
     }
 
 }

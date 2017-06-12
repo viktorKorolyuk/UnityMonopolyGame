@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking.NetworkSystem;
+using System.Diagnostics;
 
 /* TODO:
   * - make escape key show menu with
@@ -9,106 +11,119 @@ using UnityEngine.UI;
   * - finish dropdown for bidding
   * - Handle buy property (if not owned)
   */
+
 public class InputManager : MonoBehaviour {
-	GameController g;
-	// gamecontroller script
+  // GameController instance
+  GameController g;
 
-	GameObject escMenu;
-	GameObject moneyC;
-	//money
-	GameObject playerT;
-	// active player
-	GameObject biddingPrice;
-	GameObject biddingPlayer;
-	GameObject biddingOk;
+  GameObject escMenu;
+  GameObject moneyC;
 
-	GameObject doubles;
+  GameObject playerT;
+  // active player
+  GameObject bidUi;
+  GameObject doubles;
 
-	bool bidClick = false;
-	int salePrice;
+  int salePrice;
     
-	// Use this for initialization
-	void Start() {
-		g = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-		escMenu = GameObject.Find("EscMenu");
-		escMenu.SetActive(false);
+  // Use this for initialization
+  void Start() {
+    g = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+    escMenu = GameObject.Find("EscMenu");
+    moneyC = GameObject.Find("Money");
+    playerT = GameObject.Find("PlayersTurn");
+    bidUi = GameObject.Find("Bidding");
+    doubles = GameObject.Find("Doubles");
 
-		moneyC = GameObject.Find("Money"); // initalization
-		playerT = GameObject.Find("PlayersTurn");
-		biddingPrice = GameObject.Find("Price");
-		biddingPlayer = GameObject.Find("PlayerSelector");
-		biddingOk = GameObject.Find("BiddingChoose");
 
-		doubles = GameObject.Find("Doubles");
+    // Set Escape menu to invisible.
+    escMenu.SetActive(false);
+    bidUi.SetActive(false);
+  }
 
-	}
+  void Update() {
+    // If current player is not null (not recorded by GameController (g))
+    if (g.getCurrPlayer()) { 
 
-	void Update() {
-		if (g.getCurrPlayer()) { //If current player is not null (not recorded by GameController (g))
-			moneyC.GetComponent<Text>().text = "$" + g.getCurrPlayer().getMoney().ToString(); // update player's money each frame
-			playerT.GetComponent<Text>().text = g.getCurrPlayer().name; // update playername each frame
-		}
+      // Update player's money each frame
+      moneyC.GetComponent<Text>().text = "$" + g.getCurrPlayer().getMoney().ToString(); 
 
-		//If ESC/esc/Escape key is pressed
-		if (Input.GetKey(KeyCode.Escape)) {
-			Time.timeScale = 0; //Pause the game Update() function
-			escMenu.SetActive(true);
-		}
+      // Update playername each frame
+      playerT.GetComponent<Text>().text = g.getCurrPlayer().name; 
+    }
 
-		displayDoubles();
-	}
+    // If ESC/esc/Escape key is pressed
+    if (Input.GetKey(KeyCode.Escape)) {
+      Time.timeScale = 0; // Pause the game Update() function
+      escMenu.SetActive(true);
+    }
 
-	public void exitApp() { // if exit is triggered, quit the game
-		Application.Quit();
-	}
+  }
 
-	public void backToGame() { // when return to game is triggered, set the timescale back to 1, then close the escape menu
-		Time.timeScale = 1;
-		escMenu.SetActive(false);
-	}
+  // If exit is triggered, quit the game
+  public void exitApp() { 
+    Application.Quit();
+  }
 
-	public void rollDice() {
-		g.move();//tell gamecontroller to move the player
-        
-	}
+  // When return to game is triggered, set the timescale back to 1, then close the escape menu
+  public void backToGame() {
+    Time.timeScale = 1;
+    escMenu.SetActive(false);
+  }
 
-	public void payRent() {
-		g.payRent(); // tell the gamecontroller to pay the rent from the player to the other player
-        
-	}
+  public void rollDice() {
+    // Tell gamecontroller to move the player
+    g.move();
+  }
 
-	public void endTurn() {
-		g.nextTurn(); // tell the gamecontroller to end the turn and move on to the next player
-	}
+  public void payRent() {
+    // tell the gamecontroller to pay the rent from the player to the other player
+    g.payRent(); 
+  }
 
-	public void bidClicker() {
-		bidClick = true;
-	}
+  public void endTurn() {
+    // Tell the gamecontroller to end the turn and move on to the next player
+    g.nextTurn(); 
+  }
 
-	public string bidding(Tile sale, string[] playersNames) { // bidding!
-		string player;
+  // Tell GameCOntroller to buy property
+  public void buyProperty() {
+    
+  }
 
-		biddingPlayer.GetComponentInParent<Transform>().gameObject.SetActive(true);
+  // This sets up first values for player
+  public void startBidScreen() {
+    Tile currentTile = g.currTile();
 
-		while (bidClick != true) {
-		}
-		player = biddingPlayer.GetComponentInChildren<Text>().text;     // once bidclick has been clicked, return lots of stuff
-		salePrice = int.Parse(biddingPrice.GetComponentInChildren<Text>().text);
+    // Make bidding ui visible (how else are they sipposed to interact with the buttons?)
+    bidUi.SetActive(true);
 
-		biddingPlayer.GetComponentInParent<Transform>().gameObject.SetActive(false);
-		return player;
-	}
+    // Doth the tile belong to someone? If so, return. (We can't bid on pre-owned property, that's just silly)
+    if (currentTile.Owner != null) return;
 
-	public int bidPrice() {
-		return salePrice;
-	}
+  }
 
-	public void displayDoubles() {
-		string result = "";
-		if (DiceRoll.getDoubles()) {
-			result = "Doubles! Roll Again! \n (don't pay rent)";
-		}
-		doubles.GetComponent<Text>().text = result;
-	}
+  public void bidCommence() {
+    // Get base price
+    GameObject price = GameObject.Find("PriceSelector");
+
+    string rawBidText = findChild(transform, "D").GetComponent<Text>().text;
+    float result;
+    float.TryParse(rawBidText, out result);
+    if (result == float.NaN) result = g.currTile().Rent / 2;
+  }
+
+  // Allow for searching in parents for a child objects.
+  GameObject findChild(Transform parent, string name) {
+    //Loop through each transform element in the parent transform.
+    foreach (Transform child in parent) {
+      if (child.name == name) return child.gameObject; // "Hi, I would like to return this child.... what? Of course i'm serious! Stop looking at me like that!"
+
+      // Search in sub-children (children in children)
+      GameObject innerChild = findChild(child, name);
+      if (innerChild != null) return innerChild;
+    }
+    return null;
+  }
 
 }
