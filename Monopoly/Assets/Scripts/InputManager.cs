@@ -11,27 +11,32 @@ using System.Diagnostics;
   * - finish dropdown for bidding
   * - Handle buy property (if not owned)
   */
+using System;
+using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour {
   // GameController instance
   GameController g;
 
   GameObject escMenu;
-  GameObject moneyC;
-
-  GameObject playerT;
+  Text moneyC;
+  Text playerT;
   // active player
   GameObject bidUi;
   GameObject doubles;
 
+  // GameObject for memory save. Previous code was having MemoryOverflow errors. EDIT: Whilst this is true, the cause of the memory error is unknown, it might be unity itelf.
+  GameObject reusable;
+
   int salePrice;
     
+
   // Use this for initialization
   void Start() {
     g = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
     escMenu = GameObject.Find("EscMenu");
-    moneyC = GameObject.Find("Money");
-    playerT = GameObject.Find("PlayersTurn");
+    moneyC = GameObject.Find("Money").GetComponent<Text>();
+    playerT = GameObject.Find("PlayersTurn").GetComponent<Text>();
     bidUi = GameObject.Find("Bidding");
     doubles = GameObject.Find("Doubles");
 
@@ -44,20 +49,21 @@ public class InputManager : MonoBehaviour {
   void Update() {
     // If current player is not null (not recorded by GameController (g))
     if (g.getCurrPlayer()) { 
-
       // Update player's money each frame
-      moneyC.GetComponent<Text>().text = "$" + g.getCurrPlayer().getMoney().ToString(); 
-
+      moneyC.text = "$" + g.getCurrPlayer().getMoney().ToString(); 
       // Update playername each frame
-      playerT.GetComponent<Text>().text = g.getCurrPlayer().name; 
+      playerT.text = g.getCurrPlayer().name; 
     }
-
     // If ESC/esc/Escape key is pressed
     if (Input.GetKey(KeyCode.Escape)) {
       Time.timeScale = 0; // Pause the game Update() function
       escMenu.SetActive(true);
     }
+  }
 
+  //Restart the game
+  public void restartGame(){
+    SceneManager.LoadScene(Application.loadedLevel);
   }
 
   // If exit is triggered, quit the game
@@ -86,44 +92,65 @@ public class InputManager : MonoBehaviour {
     g.nextTurn(); 
   }
 
-  // Tell GameCOntroller to buy property
+  // Tell GameController to buy property
   public void buyProperty() {
-    
+    g.buyProperty();
   }
 
   // This sets up first values for player
   public void startBidScreen() {
-    Tile currentTile = g.currTile();
-
-    // Make bidding ui visible (how else are they sipposed to interact with the buttons?)
-    bidUi.SetActive(true);
+    Tile currentTile = g.getCurrTile();
 
     // Doth the tile belong to someone? If so, return. (We can't bid on pre-owned property, that's just silly)
     if (currentTile.Owner != null) return;
 
+    // Make bidding ui visible (how else are they sipposed to interact with the buttons?)
+    bidUi.SetActive(true);
+
+    // Make Screen2 invisible.
+    reusable = FindChildInParent.findChild(bidUi.transform, "Second Screen");
+    reusable.SetActive(false);
+    reusable = null;
   }
 
   public void bidCommence() {
     // Get base price
     GameObject price = GameObject.Find("PriceSelector");
 
-    string rawBidText = findChild(transform, "D").GetComponent<Text>().text;
+    // Find the GameObject named "Text" in the price selector
+    string rawBidText = FindChildInParent.findChild(price.transform, "Text").GetComponent<Text>().text;
     float result;
     float.TryParse(rawBidText, out result);
-    if (result == float.NaN) result = g.currTile().Rent / 2;
+    print((result == 0) ? "we got a smart aleck over 'ere bill. I think its time we teach 'em a li'l' lesson." : null);
+    result = (result == 0) ? g.getCurrPlayer().getMoney() * 2 : result;
+
+    // Make Screen1 invisible.
+    reusable = FindChildInParent.findChild(bidUi, "First Screen");
+    reusable.SetActive(false);
+    // Make Screen2 visible.
+    reusable = FindChildInParent.findChild(bidUi, "Second Screen");
+    reusable.SetActive(true);
+
+
+    GameObject player1 = FindChildInParent.findChild(reusable.transform, "Player1");
+    GameObject player2 = FindChildInParent.findChild(reusable.transform, "Player2");
+
+    //Set Left-most text to be current player
+    //Setting title for current player
+    reusable = FindChildInParent.findChild(player1, "Player 1 Text");
+    reusable.GetComponent<Text>().text = g.getCurrPlayer().name;
+
+    //Setting current player bid price
+    reusable = FindChildInParent.findChild(player1, "Player 1 bidText");
+    reusable.GetComponent<Text>().text = "Bid: $" + result.ToString();
+
+    //Set Right-most text to opposite player
+    reusable = FindChildInParent.findChild(player2, "Player 2 Text");
+    reusable.GetComponent<Text>().text = (g.getCurrPlayer().name == "Player1") ? "Player2" : "Player1";
+
+    //Setting current player bid price
+    reusable = FindChildInParent.findChild(player2, "Player 2 bidText");
+    reusable.GetComponent<Text>().text = "Bid: $" + 0;
+    reusable = null;
   }
-
-  // Allow for searching in parents for a child objects.
-  GameObject findChild(Transform parent, string name) {
-    //Loop through each transform element in the parent transform.
-    foreach (Transform child in parent) {
-      if (child.name == name) return child.gameObject; // "Hi, I would like to return this child.... what? Of course i'm serious! Stop looking at me like that!"
-
-      // Search in sub-children (children in children)
-      GameObject innerChild = findChild(child, name);
-      if (innerChild != null) return innerChild;
-    }
-    return null;
-  }
-
 }
