@@ -10,20 +10,23 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
-  //Value for tile price
+// Price of the property
   public int originalPrice = 100;
 
+	// Ttype of the property (NOT USED)
   string tileType;
-  //What type of tile is it?
+  
+// Name of the property
   string propertyName;
-  //What is it called?
+
+// Reference to instance of PlayerController which a Player is using.
   PlayerController owner;
-  //Reference to instance of PlayerController which a Player is using.
+
 
 
   // Use this for initialization
   void Start() {
-    propertyName = gameObject.name; //Set default name
+    propertyName = gameObject.name; // Set default name
   }
 
   /*
@@ -32,7 +35,7 @@ public class Tile : MonoBehaviour {
 	 */
 
 
-  public int Rent {
+  public int Rent { 					
     get {
       return this.originalPrice;
     }
@@ -67,4 +70,9 @@ public class Tile : MonoBehaviour {
       tileType = value;
     }
   }
+
+
+
+
+
 }
