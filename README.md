@@ -8,5 +8,7 @@ A Monopoly clone using the Unity3D engine. This repository is used as a backup f
 - Property managment
   + Buy property
   + Pay rent on property
-###### Important notice
+  
+  <br><br><br>
+##### Important notice
 ###### In this project we use resources that we didn't create and have referenced them in the `REFERENCES.txt` file avaliable in this repository.
